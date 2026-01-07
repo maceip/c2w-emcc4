@@ -206,6 +206,12 @@ func build(builderPath string, srcImgPath string, destDir, destFile string, clic
 	if o := clicontext.String("assets"); o != "" {
 		buildxArgs = append(buildxArgs, "--build-context", fmt.Sprintf("assets=%s", o))
 	}
+	// Always inject qemu-wasm-src build context from local directory
+	if qemuPath, err := filepath.Abs("./qemu-wasm-local"); err == nil {
+		buildxArgs = append(buildxArgs, "--build-context", fmt.Sprintf("qemu-wasm-src=%s", qemuPath))
+	} else {
+		log.Printf("Warning: could not resolve absolute path for qemu-wasm-local: %v", err)
+	}
 	if o := clicontext.String("pack"); o != "" {
 		buildxArgs = append(buildxArgs, "--build-context", fmt.Sprintf("qemu-aarch64-pack=%s", o))
 	}
